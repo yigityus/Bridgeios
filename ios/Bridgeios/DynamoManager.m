@@ -9,7 +9,17 @@
 #import "DynamoManager.h"
 #import <React/RCTLog.h>
 
-@implementation DynamoManager
+@implementation DynamoManager {
+  bool hasListeners;
+}
+
+-(void)startObserving {
+  hasListeners = YES;
+}
+
+-(void)stopObserving {
+  hasListeners = NO;
+}
 
 -(id)init {
   
@@ -158,7 +168,11 @@ RCT_EXPORT_METHOD(isDeviceConnected:(RCTResponseSenderBlock) callback) {
   
   NSLog(@"%@", data);
   
-  [self sendEventWithName:@"DataReceived" body:@{@"payload": data}];
+  if (hasListeners) {
+    [self sendEventWithName:@"DataReceived" body:@{@"payload": data}];  
+  }
+  
+  
   
 }
 
